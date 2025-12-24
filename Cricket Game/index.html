@@ -28,14 +28,32 @@
 </head>
 <body>
   <div>
-    <h1 class="heading">Welcome to Bat Ball Stump Game <img src="cricket.png" alt=""></h1>
+    <h1 class="heading">Welcome to Bat Ball Stump Game <img src="icons/cricket.png" alt=""></h1>
 
-    <button class="icon" onclick="playGame('Bat')">Bat <img src="cricket-bat.png" alt=""></button>
-    <button class="icon" onclick="playGame('Ball')">Ball <img src="ball.png" alt=""></button>
-    <button class="icon" onclick="playGame('Stump')">Stump <img src="stump.png" alt=""></button>
+    <button class="icon" onclick="playGame('Bat')">Bat <img src="icons/cricket-bat.png" alt=""></button>
+    <button class="icon" onclick="playGame('Ball')">Ball <img src="icons/ball.png" alt=""></button>
+    <button class="icon" onclick="playGame('Stump')">Stump <img src="icons/stump.png" alt=""></button>
+    <button onclick="localStorage.clear()
+    score ={
+       win:0,
+      lost: 0,
+      tie : 0,
+    }">Reset Score</button>
   </div>
 
+  <h3 id="user-choice"></h3>
+  <h3 id="computer-choice"></h3>
+  <h3 id="result"></h3>
+  <h3 id="score"></h3>
+
   <script>
+    let scoreStr = localStorage.getItem('Score');
+    let score = JSON.parse(scoreStr) || {
+      win:0,
+      lost: 0,
+      tie : 0,
+    };
+   
     function playGame(userChoice) {
       const randomNumber = Math.random() * 3;
       let computerChoice;
@@ -50,19 +68,49 @@
 
       let resultMsg;
       if (userChoice === computerChoice) {
+        score.tie = score.tie + 1;
         resultMsg = 'It is a Tie!';
       } else if (
         (userChoice === 'Bat' && computerChoice === 'Ball') ||
         (userChoice === 'Ball' && computerChoice === 'Stump') ||
         (userChoice === 'Stump' && computerChoice === 'Bat')
       ) {
+        score.win = score.win + 1;
         resultMsg = 'You Win!';
       } else {
+        score.lost = score.lost + 1;
         resultMsg = 'Computer Wins!';
       }
 
-      alert(`You chose ${userChoice}. Computer chose ${computerChoice}. ${resultMsg}`);
-    }
+       showResult(userChoice, computerChoice, resultMsg);
+  }
+      
+      function showResult(userChoice, computerChoice, resultMsg) {
+        localStorage.setItem('Score' ,JSON.stringify(score));
+        document.querySelector('#user-choice').innerText = `You have chosen ${userChoice}`;
+
+        document.querySelector('#computer-choice').innerText =
+        computerChoice !== undefined ? `Computer have chosen ${computerChoice}`: '';
+
+        document.querySelector('#result').innerText = `Result is: ${resultMsg}`;
+        
+        document.querySelector('#score').innerText = `Score: Win:${score.win} ,Lost:${score.lost} ,Tie:${score.tie}`;
+
+
+         console.log(score);
+
+
+         alert(`You chose ${userChoice}. Computer chose ${computerChoice}
+         
+
+
+
+         ${resultMsg}
+         
+         Won: ${score.win} , Lost: ${score.lost} , Tie: ${score.tie}`);
+      }
+    
+    
   </script>
 </body>
 </html>
